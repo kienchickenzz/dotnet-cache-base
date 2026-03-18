@@ -1,0 +1,19 @@
+services:
+    redis:
+        hostname: "redis_cache"
+        container_name: "redis_cache"
+        image: "redis:7.0-alpine"
+        ports:
+        - "6379:6379"
+        networks:
+        - server
+        volumes:
+        - ./volume/redis:/data
+        environment:
+            REDIS_PASSWORD: ${REDIS_PASSWORD}
+        command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+
+networks:
+    server:
+        driver: bridge
+        name: server_network

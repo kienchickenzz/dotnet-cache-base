@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BaseCache.Api/BaseCache.Api.csproj" />
+  <Project Path="BaseCache.Application/BaseCache.Application.csproj" />
+  <Project Path="BaseCache.Infrastructure/BaseCache.Infrastructure.csproj" />
+</Solution>
