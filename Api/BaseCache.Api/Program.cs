@@ -1,3 +1,6 @@
+using BaseCache.Application;
+using BaseCache.Persistence;
+using BaseCache.Persistence.Initialization;
 using BaseCache.Api.Configurations;
 using BaseCache.Api.Extensions;
 using BaseCache.Api.OpenApi;
@@ -6,7 +9,6 @@ using BaseCache.Api.OpenApi;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,8 +33,7 @@ await app.Services.InitializeDatabaseAsync();
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())
 // {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
+//     app.UseSwaggerExtension();
 // }
 
 app.UseSwaggerExtension();
@@ -43,5 +44,19 @@ app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
 
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    var urls = string.Join(", ", app.Urls);
+    logger.LogInformation("----------");
+    logger.LogInformation("Application started successfully!");
+    logger.LogInformation("Environment: {Environment}", app.Environment.EnvironmentName);
+    logger.LogInformation("Listening on: {Urls}", urls);
+    logger.LogInformation("Swagger UI: {Urls}/swagger", app.Urls.FirstOrDefault());
+    logger.LogInformation("----------");
+});
 
 app.Run();
+
+
+public partial class Program { }

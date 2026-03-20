@@ -4,6 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DocumentationFile>API.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,8 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BaseCache.Application\BaseCache.Application.csproj" />
-        <ProjectReference Include="..\BaseCache.Infrastructure\BaseCache.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\Infrastructure\BaseCache.Infrastructure\BaseCache.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\Infrastructure\BaseCache.Persistence\BaseCache.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

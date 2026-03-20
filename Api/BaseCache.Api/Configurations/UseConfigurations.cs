@@ -10,6 +10,8 @@ public static class UseConfigurations
             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
             .AddJsonFile($"{configurationsDirectory}/logger.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"{configurationsDirectory}/logger.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"{configurationsDirectory}/database.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"{configurationsDirectory}/database.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
             .AddJsonFile($"{configurationsDirectory}/cache.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"{configurationsDirectory}/cache.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();

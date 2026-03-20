@@ -1,6 +1,6 @@
 namespace BaseCache.Infrastructure;
 
-using BaseCache.Application.Common.Interfaces;
+using BaseCache.Application.Common.ApplicationServices.Caching;
 using BaseCache.Infrastructure.Caching;
 using BaseCache.Infrastructure.Serializer;
 using Microsoft.Extensions.Configuration;

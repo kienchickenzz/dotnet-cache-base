@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BaseCache.Api</name>
+    </assembly>
+    <members>
+        <member name="M:BaseCache.Api.Controllers.Features.V1.Products.ProductController.GetProductPaginated(BaseCache.Application.Features.V1.Products.Queries.GetProducts.GetProductsQuery)">
+            <summary>
+            Get the paginated product list
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseCache.Api.Controllers.Features.V1.Products.ProductController.GetProductById(System.Int32)">
+            <summary>
+            Get product by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseCache.Api.Controllers.Features.V1.Products.ProductController.CreateProduct(BaseCache.Application.Features.V1.Products.Commands.CreateProduct.CreateProductCommand)">
+            <summary>
+            Create product
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseCache.Api.Controllers.Features.V1.Products.ProductController.UpdateProduct(BaseCache.Application.Features.V1.Products.Commands.UpdateProduct.UpdateProductCommand)">
+            <summary>
+            Update product
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseCache.Api.Controllers.Features.V1.Products.ProductController.DeleteProduct(System.Int32)">
+            <summary>
+            Delete product
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+            <exception cref="T:BaseCache.Application.Common.Exceptions.BadRequestException"></exception>
+        </member>
+        <member name="T:BaseCache.Api.Extensions.SerilogExtensions">
+            <summary>
+            Extension methods for configuring Serilog logging.
+            </summary>
+        </member>
+        <member name="F:BaseCache.Api.Extensions.SerilogExtensions.DefaultSectionName">
+            <summary>
+            Default configuration section name for logger settings.
+            </summary>
+        </member>
+        <member name="M:BaseCache.Api.Extensions.SerilogExtensions.UseSerilogFromSettings(Microsoft.Extensions.Hosting.IHostBuilder,System.String)">
+            <summary>
+            Configures Serilog using settings from the specified configuration section.
+            </summary>
+            <param name="host">The host builder instance.</param>
+            <param name="sectionName">
+            The configuration section name containing Serilog settings.
+            Defaults to "LoggerSettings".
+            </param>
+            <returns>The configured host builder for chaining.</returns>
+        </member>
+    </members>
+</doc>
