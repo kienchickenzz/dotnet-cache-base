@@ -1,9 +1,11 @@
-using BaseCache.Application.Common.Interfaces;
+namespace BaseCache.Infrastructure.Caching;
+
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System.Text;
 
-namespace BaseCache.Infrastructure.Caching;
+using BaseCache.Application.Common.ApplicationServices.Caching;
+
 
 #pragma warning disable CA2254
 public class DistributedCacheService : ICacheService

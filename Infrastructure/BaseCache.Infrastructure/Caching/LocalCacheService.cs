@@ -1,8 +1,9 @@
-using BaseCache.Application.Common.Interfaces;
+namespace BaseCache.Infrastructure.Caching;
+
+using BaseCache.Application.Common.ApplicationServices.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace BaseCache.Infrastructure.Caching;
 
 public class LocalCacheService : ICacheService
 {

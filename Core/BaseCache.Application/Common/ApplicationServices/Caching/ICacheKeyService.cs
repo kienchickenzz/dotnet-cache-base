@@ -1,4 +1,5 @@
-﻿namespace BaseCache.Application.Common.Interfaces;
+﻿namespace BaseCache.Application.Common.ApplicationServices.Caching;
+
 
 public interface ICacheKeyService
 {

@@ -1,9 +1,10 @@
-using BaseCache.Application.Common.Interfaces;
+﻿namespace BaseCache.Infrastructure.Serializer;
+
+using BaseCache.Application.Common.ApplicationServices.Caching;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace BaseCache.Infrastructure.Serializer;
 
 public class NewtonSoftService : ISerializerService
 {

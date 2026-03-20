@@ -1,5 +1,6 @@
 namespace BaseCache.Infrastructure.Caching;
 
+
 public class CacheSettings
 {
     public bool UseDistributedCache { get; set; }

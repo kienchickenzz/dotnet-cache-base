@@ -1,5 +1,12 @@
 <Solution>
-  <Project Path="BaseCache.Api/BaseCache.Api.csproj" />
-  <Project Path="BaseCache.Application/BaseCache.Application.csproj" />
-  <Project Path="BaseCache.Infrastructure/BaseCache.Infrastructure.csproj" />
+    <Folder Name="/Api/">
+        <Project Path="Api/BaseCache.Api/BaseCache.Api.csproj" />
+    </Folder>
+    <Folder Name="/Core/">
+        <Project Path="Core/BaseCache.Application/BaseCache.Application.csproj" />
+        <Project Path="Core/BaseCache.Domain/BaseCache.Domain.csproj" />
+    </Folder>
+    <Folder Name="/Infrastructure/">
+        <Project Path="Infrastructure/BaseCache.Infrastructure/BaseCache.Infrastructure.csproj" />
+    </Folder>
 </Solution>
