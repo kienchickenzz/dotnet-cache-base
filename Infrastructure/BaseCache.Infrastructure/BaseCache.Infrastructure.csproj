@@ -17,6 +17,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\BaseCache.Application\BaseCache.Application.csproj" />
+        <ProjectReference Include="..\..\Core\BaseCache.Domain\BaseCache.Domain.csproj" />
     </ItemGroup>
 
 </Project>

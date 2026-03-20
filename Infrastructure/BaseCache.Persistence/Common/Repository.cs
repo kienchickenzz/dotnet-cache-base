@@ -5,15 +5,15 @@
  * for flexible LINQ queries. Child repositories only need
  * to specify the entity type.</p>
  */
-namespace BaseCleanArchitecture.Persistence.Common;
+namespace BaseCache.Persistence.Common;
 
 using System.Linq.Expressions;
 
 using Microsoft.EntityFrameworkCore;
 
-using BaseCleanArchitecture.Application.Common.ApplicationServices.Persistence;
-using BaseCleanArchitecture.Domain.Common;
-using BaseCleanArchitecture.Persistence.DatabaseContext;
+using BaseCache.Application.Common.ApplicationServices.Persistence;
+using BaseCache.Domain.Common;
+using BaseCache.Persistence.DatabaseContext;
 
 
 public class Repository<TEntity> : IRepository<TEntity>

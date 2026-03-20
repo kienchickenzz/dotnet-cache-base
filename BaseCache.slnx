@@ -8,5 +8,6 @@
     </Folder>
     <Folder Name="/Infrastructure/">
         <Project Path="Infrastructure/BaseCache.Infrastructure/BaseCache.Infrastructure.csproj" />
+        <Project Path="Infrastructure/BaseCache.Persistence/BaseCache.Persistence.csproj" />
     </Folder>
 </Solution>

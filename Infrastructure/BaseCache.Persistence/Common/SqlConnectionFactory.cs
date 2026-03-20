@@ -1,9 +1,9 @@
-﻿namespace BaseCleanArchitecture.Persistence.Common;
+﻿namespace BaseCache.Persistence.Common;
 
 using Microsoft.Data.SqlClient;
 using System.Data;
 
-using BaseCleanArchitecture.Application.Common.ApplicationServices.Persistence;
+using BaseCache.Application.Common.ApplicationServices.Persistence;
 
 
 internal sealed class SqlConnectionFactory : ISqlConnectionFactory
