@@ -1,10 +1,11 @@
+namespace BaseCache.Infrastructure;
+
 using BaseCache.Application.Common.Interfaces;
 using BaseCache.Infrastructure.Caching;
 using BaseCache.Infrastructure.Serializer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BaseCache.Infrastructure;
 
 public static class DependencyInjection
 {
