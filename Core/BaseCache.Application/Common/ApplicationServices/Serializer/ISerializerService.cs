@@ -1,4 +1,4 @@
-﻿namespace BaseCache.Application.Common.ApplicationServices.Caching;
+﻿namespace BaseCache.Application.Common.ApplicationServices.Serializer;
 
 
 public interface ISerializerService

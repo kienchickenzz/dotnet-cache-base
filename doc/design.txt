@@ -1,0 +1,70 @@
+Flow Diagram
+
+                          STARTUP
+                             │
+                             ▼
+                   ┌─────────────────┐
+                   │ Provider = ?    │
+                   └────────┬────────┘
+                            │
+            ┌───────────────┴───────────────┐
+            │                               │
+            ▼                               ▼
+        InMemory                          Redis
+            │                               │
+            │                               ▼
+            │                    ┌──────────────────┐
+            │                    │ TryConnectRedis  │
+            │                    └────────┬─────────┘
+            │                             │
+            │                   ┌─────────┴─────────┐
+            │                   │                   │
+            │                   ▼                   ▼
+            │               Connected            Failed
+            │                   │                   │
+            │                   ▼                   │
+            │           RedisCacheService           │
+            │           (Singleton)                 │
+            │                                       │
+            └──────────────────┬────────────────────┘
+                               │ (fallback)
+                               ▼
+                     InMemoryCacheService
+                        (Singleton)
+
+
+                         RUNTIME
+                             │
+                             ▼
+                ┌────────────────────────┐
+                │  RedisCacheService     │
+                │  GetAsync / SetAsync   │
+                └───────────┬────────────┘
+                            │
+                     ┌──────┴──────┐
+                     │             │
+                     ▼             ▼
+                 Success        Exception
+                     │             │
+                     ▼             ▼
+                Return data    Log warning
+                              Return default
+                              (no crash)
+
+
+Lifetime Summary
+
+┌──────────────────────┬───────────┬─────────────────────────────┐
+│      Component       │ Lifetime  │            Lý do            │
+├──────────────────────┼───────────┼─────────────────────────────┤
+│ IMemoryCache         │ Singleton │ Framework default           │
+├──────────────────────┼───────────┼─────────────────────────────┤
+│ CacheSettings        │ Singleton │ Config, immutable           │
+├──────────────────────┼───────────┼─────────────────────────────┤
+│ InMemoryCacheService │ Singleton │ Wrap singleton IMemoryCache │
+├──────────────────────┼───────────┼─────────────────────────────┤
+│ RedisCacheService    │ Singleton │ Stateless, thread-safe      │
+├──────────────────────┼───────────┼─────────────────────────────┤
+│ ICacheKeyService     │ Scoped    │ Có thể cần HttpContext      │
+└──────────────────────┴───────────┴─────────────────────────────┘
+

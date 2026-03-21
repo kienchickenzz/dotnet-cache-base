@@ -29,6 +29,8 @@ public static class SerilogExtensions
     /// <returns>The configured host builder for chaining.</returns>
     public static IHostBuilder UseSerilogFromSettings(this IHostBuilder host, string sectionName = DefaultSectionName)
     {
+        // TODO: Liệu có thể refactor đoạn code này gọn hơn như bên dưới không
+        // var settings = config.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
         return host.UseSerilog((context, config) =>
         {
             var section = context.Configuration.GetSection(sectionName);

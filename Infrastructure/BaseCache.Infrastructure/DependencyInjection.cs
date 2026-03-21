@@ -1,10 +1,13 @@
 namespace BaseCache.Infrastructure;
 
-using BaseCache.Application.Common.ApplicationServices.Caching;
-using BaseCache.Infrastructure.Caching;
-using BaseCache.Infrastructure.Serializer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
+
+using BaseCache.Application.Common.ApplicationServices.Caching;
+using BaseCache.Application.Common.ApplicationServices.Serializer;
+using BaseCache.Infrastructure.Caching;
+using BaseCache.Infrastructure.Serializer;
 
 
 public static class DependencyInjection
@@ -20,41 +23,53 @@ public static class DependencyInjection
 
     private static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration config)
     {
+        var settings = config.GetSection(nameof(CacheSettings)).Get<CacheSettings>()
+            ?? new CacheSettings();
+
+        services.AddSingleton(settings);
         services.AddScoped<ICacheKeyService, CacheKeyService>();
 
-        var settings = config.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
-        if (settings is null) return services;
-
-        if (settings.UseDistributedCache)
+        if (settings.Provider == CacheProvider.Redis && TryConnectRedis(settings))
         {
-            if (settings.PreferRedis)
+            services.AddStackExchangeRedisCache(options =>
             {
-                services.AddStackExchangeRedisCache(options =>
-                {
-                    options.Configuration = settings.RedisURL;
-                    options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
-                    {
-                        AbortOnConnectFail = true,
-                        EndPoints = { settings.RedisURL! }
-                    };
-                });
-            }
-            else
-            {
-                services.AddDistributedMemoryCache();
-            }
+                options.Configuration = settings.RedisConnection;
+            });
+            services.AddTransient<ICacheService, RedisCacheService>();
 
-            services.AddTransient<ICacheService, DistributedCacheService>();
-        }
-        else
-        {
-            services.AddTransient<ICacheService, LocalCacheService>();
+            return services;
         }
 
-        // TODO: Dù dùng Redis hay không thì vẫn có cache trong memory là sao?? 
+        // Default hoặc Fallback: InMemory
         services.AddMemoryCache();
+        services.AddTransient<ICacheService, InMemoryCacheService>();
+
         return services;
     }
+
+    private static bool TryConnectRedis(CacheSettings settings)
+    {
+        if (string.IsNullOrWhiteSpace(settings.RedisConnection))
+        {
+            return false;
+        }
+
+        try
+        {
+            using var connection = ConnectionMultiplexer.Connect(
+                settings.RedisConnection,
+                options => options.ConnectTimeout = 5000);
+
+            return connection.IsConnected;
+        }
+        catch (Exception ex)
+        {
+            // Log warning - fallback to InMemory
+            Console.WriteLine($"[Warning] Redis connection failed: {ex.Message}. Falling back to InMemory cache.");
+            return false;
+        }
+    }
+
 
     private static IServiceCollection AddSerializer(this IServiceCollection services)
     {

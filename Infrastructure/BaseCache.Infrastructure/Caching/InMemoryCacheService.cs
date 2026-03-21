@@ -1,17 +1,26 @@
 namespace BaseCache.Infrastructure.Caching;
 
-using BaseCache.Application.Common.ApplicationServices.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
+using BaseCache.Application.Common.ApplicationServices.Caching;
 
-public class LocalCacheService : ICacheService
+
+public class InMemoryCacheService : ICacheService
 {
-    private readonly ILogger<LocalCacheService> _logger;
     private readonly IMemoryCache _cache;
+    private readonly CacheSettings _settings;
+    private readonly ILogger<InMemoryCacheService> _logger;
 
-    public LocalCacheService(IMemoryCache cache, ILogger<LocalCacheService> logger) =>
-        (_cache, _logger) = (cache, logger);
+    public InMemoryCacheService(
+        IMemoryCache cache,
+        CacheSettings settings,
+        ILogger<InMemoryCacheService> logger)
+    {
+        _cache = cache;
+        _settings = settings;
+        _logger = logger;
+    }
 
     public T? Get<T>(string key) =>
         _cache.Get<T>(key);
@@ -39,11 +48,14 @@ public class LocalCacheService : ICacheService
 
     public void Set<T>(string key, T value, TimeSpan? slidingExpiration = null)
     {
-        // TODO: add to appsettings?
-        slidingExpiration ??= TimeSpan.FromMinutes(10); // Default expiration time of 10 minutes.
+        slidingExpiration ??= TimeSpan.FromMinutes(_settings.DefaultSlidingExpirationMinutes);
 
-        _cache.Set(key, value, new MemoryCacheEntryOptions { SlidingExpiration = slidingExpiration });
-        _logger.LogDebug($"Added to Cache : {key}", key);
+        _cache.Set(key, value, new MemoryCacheEntryOptions
+        {
+            SlidingExpiration = slidingExpiration
+        });
+
+        _logger.LogDebug("Added to InMemory Cache: {Key}", key);
     }
 
     public Task SetAsync<T>(string key, T value, TimeSpan? slidingExpiration = null, CancellationToken token = default)

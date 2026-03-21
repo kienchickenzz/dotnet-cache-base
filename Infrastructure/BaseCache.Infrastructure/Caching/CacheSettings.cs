@@ -1,9 +1,15 @@
 namespace BaseCache.Infrastructure.Caching;
 
 
+public enum CacheProvider
+{
+    InMemory,
+    Redis
+}
+
 public class CacheSettings
 {
-    public bool UseDistributedCache { get; set; }
-    public bool PreferRedis { get; set; }
-    public string? RedisURL { get; set; }
+    public CacheProvider Provider { get; set; } = CacheProvider.InMemory;
+    public string? RedisConnection { get; set; }
+    public int DefaultSlidingExpirationMinutes { get; set; } = 10;
 }

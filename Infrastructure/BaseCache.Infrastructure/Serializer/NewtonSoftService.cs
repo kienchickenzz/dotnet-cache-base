@@ -1,6 +1,6 @@
 ﻿namespace BaseCache.Infrastructure.Serializer;
 
-using BaseCache.Application.Common.ApplicationServices.Caching;
+using BaseCache.Application.Common.ApplicationServices.Serializer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
