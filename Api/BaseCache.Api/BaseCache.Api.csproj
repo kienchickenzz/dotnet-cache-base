@@ -5,6 +5,11 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DocumentationFile>API.xml</DocumentationFile>
+        
+        <!-- Tắt CS1587: XML comment không đặt trước language element hợp lệ (dùng cho file header comment) -->
+        <NoWarn>CS1587</NoWarn>
+        <!-- Tắt CS1591: thiếu XML comment cho public type/member (cho phép public member không bắt buộc có XML doc) -->
+        <NoWarn>CS1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
