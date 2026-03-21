@@ -68,3 +68,30 @@ Lifetime Summary
 │ ICacheKeyService     │ Scoped    │ Có thể cần HttpContext      │
 └──────────────────────┴───────────┴─────────────────────────────┘
 
+Flow
+
+- GET /api/product/{id}
+          │
+          ▼
+  ┌─────────────────────────┐
+  │ Cache: "Product-{id}"   │
+  │     exists?             │
+  └───────────┬─────────────┘
+        ┌─────┴─────┐
+        │           │
+       YES          NO
+        │           │
+        ▼           ▼
+     Return     Query DB
+     cached     Set cache
+     value      Return
+
+
+- PUT/DELETE /api/product/{id}
+          │
+          ▼
+     Execute operation
+          │
+          ▼
+     Remove cache key
+     "Product-{id}"

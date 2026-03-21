@@ -1,20 +1,35 @@
-﻿namespace BaseCache.Application.Features.V1.Products.Commands.UpdateProduct;
+/**
+ * Handler for UpdateProductCommand - updates product details and invalidates cache.
+ *
+ * <p>After updating, the cached entry is removed to ensure subsequent reads
+ * fetch fresh data from the database (cache invalidation strategy).</p>
+ */
+namespace BaseCache.Application.Features.V1.Products.Commands.UpdateProduct;
 
-using BaseCache.Application.Common.Messaging;
+using BaseCache.Application.Common.ApplicationServices.Caching;
 using BaseCache.Application.Common.ApplicationServices.Persistence;
+using BaseCache.Application.Common.Messaging;
 using BaseCache.Domain.AggregatesModels.Products;
 using BaseCache.Domain.Common;
 
 
+/// <summary>
+/// Handles <see cref="UpdateProductCommand"/> with cache invalidation.
+/// </summary>
 public sealed class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, int>
 {
     private readonly IProductRepository _productRepository;
+    private readonly ICacheService _cache;
+    private readonly ICacheKeyService _cacheKeys;
 
     public UpdateProductCommandHandler(
-        IProductRepository productRepository
-    )
+        IProductRepository productRepository,
+        ICacheService cache,
+        ICacheKeyService cacheKeys)
     {
         _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+        _cacheKeys = cacheKeys ?? throw new ArgumentNullException(nameof(cacheKeys));
     }
 
     public async Task<Result<int>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -36,6 +51,11 @@ public sealed class UpdateProductCommandHandler : ICommandHandler<UpdateProductC
         product.UpdateDetails(name, description);
 
         await _productRepository.UpdateAsync(product, cancellationToken);
+        // Note: SaveChanges handled by TransactionPipelineBehavior
+
+        // Invalidate cache to ensure consistency
+        var cacheKey = _cacheKeys.GetCacheKey(nameof(Product), product.Id);
+        await _cache.RemoveAsync(cacheKey, cancellationToken);
 
         return product.Id;
     }

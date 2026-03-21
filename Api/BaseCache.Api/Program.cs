@@ -1,4 +1,5 @@
 using BaseCache.Application;
+using BaseCache.Infrastructure;
 using BaseCache.Persistence;
 using BaseCache.Persistence.Initialization;
 using BaseCache.Api.Configurations;
@@ -24,6 +25,7 @@ builder.Services.AddApiServices();
 builder.Services.AddApplication();
 
 builder.Services.AddInfrastructurePersistence(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
