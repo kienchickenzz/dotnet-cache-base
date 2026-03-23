@@ -6,6 +6,7 @@ using System.Text;
 
 using BaseCache.Application.Common.ApplicationServices.Caching;
 using BaseCache.Application.Common.ApplicationServices.Serializer;
+using BaseCache.Infrastructure.Settings;
 
 
 public class RedisCacheService : ICacheService

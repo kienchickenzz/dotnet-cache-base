@@ -16,6 +16,7 @@ using BaseCache.Application.Common.ApplicationServices.Caching;
 using BaseCache.Application.Common.ApplicationServices.Serializer;
 using BaseCache.Infrastructure.Caching;
 using BaseCache.Infrastructure.Serializer;
+using BaseCache.Infrastructure.Settings;
 
 
 /// <summary>

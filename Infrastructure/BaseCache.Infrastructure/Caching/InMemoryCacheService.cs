@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 using BaseCache.Application.Common.ApplicationServices.Caching;
+using BaseCache.Infrastructure.Settings;
 
 
 public class InMemoryCacheService : ICacheService

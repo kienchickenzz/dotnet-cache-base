@@ -1,6 +1,6 @@
-namespace BaseCache.Infrastructure.Caching;
+namespace BaseCache.Infrastructure.Settings;
 
-// TODO: Nên đặt trong Infra hay trong Application??
+
 public enum CacheProvider
 {
     InMemory,
