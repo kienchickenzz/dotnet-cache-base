@@ -14,20 +14,11 @@ public abstract class BaseEntity : IAuditableEntity, ISoftDelete
     public DateTime LastModifiedOn { get; set; }
     public DateTime? DeletedOn { get; set; }
     public int? DeletedBy { get; set; }
-
-    //protected BaseEntity(Guid id)
-    //{
-    //    Id = id;
-    //}
 }
 
 public abstract class BaseEntityRoot : BaseEntity, IAggregateRoot
 {
     private readonly List<IDomainEvent> _domainEvents = new();
-
-    //protected BaseEntityRoot(Guid id) : base(id)
-    //{
-    //}
 
     public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {
