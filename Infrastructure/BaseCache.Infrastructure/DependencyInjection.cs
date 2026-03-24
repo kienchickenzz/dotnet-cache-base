@@ -1,15 +1,14 @@
 /// <summary>
 /// DependencyInjection registers all Infrastructure-layer services into the DI container.
 ///
-/// <p>Centralizes service registration (caching, serialization) to keep Program.cs clean
-/// and ensure Infrastructure concerns are configured in one place.</p>
+/// <para>Centralizes service registration (caching, serialization) to keep Program.cs clean
+/// and ensure Infrastructure concerns are configured in one place.</para>
 /// </summary>
 
 namespace BaseCache.Infrastructure;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
 using BaseCache.Application.Common.ApplicationServices.Caching;
@@ -30,8 +29,16 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         services
+            ._AddSettings(config)
             ._AddCaching(config)
             ._AddSerializer();
+
+        return services;
+    }
+
+    private static IServiceCollection _AddSettings(this IServiceCollection services, IConfiguration config)
+    {
+        services.Configure<CacheSettings>(config.GetSection(CacheSettings.SectionName));
 
         return services;
     }
@@ -39,41 +46,33 @@ public static class DependencyInjection
     /// <summary>
     /// Đăng ký cache provider dựa trên cấu hình.
     /// Ưu tiên Redis nếu được cấu hình và kết nối thành công, ngược lại fallback về InMemory.
+    /// Logging được thực hiện trong constructor của từng service (construction logging pattern).
     /// </summary>
     private static IServiceCollection _AddCaching(this IServiceCollection services, IConfiguration config)
     {
-        var settings = config.GetSection(nameof(CacheSettings)).Get<CacheSettings>()
-            ?? new CacheSettings();
-        services.AddSingleton(settings);
+        var settings = config
+            .GetSection(CacheSettings.SectionName)
+            .Get<CacheSettings>();
 
-        services.AddScoped<ICacheKeyService, CacheKeyService>();
+        services.AddSingleton<ICacheKeyService, CacheKeyService>();
 
-        var logger = services.BuildServiceProvider()
-            .GetRequiredService<ILoggerFactory>()
-            .CreateLogger(nameof(DependencyInjection));
+        var useRedis = settings?.Provider == CacheProvider.Redis
+            && _TryConnectRedis(settings.RedisConnection);
 
-        if (settings.Provider == CacheProvider.Redis)
+        if (useRedis)
         {
-            if (_TryConnectRedis(settings.RedisConnection))
+            services.AddStackExchangeRedisCache(options =>
             {
-                services.AddStackExchangeRedisCache(options =>
-                {
-                    options.Configuration = settings.RedisConnection;
-                });
-                services.AddTransient<ICacheService, RedisCacheService>();
-
-                logger.LogInformation("Cache initialized: Redis");
-                return services;
-            }
-
-            logger.LogWarning("Redis connection failed. Falling back to InMemory cache");
+                options.Configuration = settings!.RedisConnection;
+            });
+            services.AddSingleton<ICacheService, RedisCacheService>();
+        }
+        else
+        {
+            services.AddMemoryCache();
+            services.AddSingleton<ICacheService, InMemoryCacheService>();
         }
 
-        // Default hoặc Fallback: InMemory
-        services.AddMemoryCache();
-        services.AddTransient<ICacheService, InMemoryCacheService>();
-
-        logger.LogInformation("Cache initialized: InMemory");
         return services;
     }
 
@@ -99,13 +98,12 @@ public static class DependencyInjection
         }
     }
 
-
     /// <summary>
-    /// Đăng ký serializer service.
+    /// Đăng ký serializer service (singleton vì stateless).
     /// </summary>
     private static IServiceCollection _AddSerializer(this IServiceCollection services)
     {
-        services.AddScoped<ISerializerService, NewtonSoftService>();
+        services.AddSingleton<ISerializerService, NewtonSoftService>();
         return services;
     }
 }

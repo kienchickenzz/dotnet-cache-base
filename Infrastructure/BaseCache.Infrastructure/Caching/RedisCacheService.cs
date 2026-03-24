@@ -1,7 +1,14 @@
+/// <summary>
+/// RedisCacheService provides distributed caching using Redis via IDistributedCache.
+///
+/// <para>Preferred cache provider for multi-instance deployments requiring shared cache state.</para>
+/// </summary>
+
 namespace BaseCache.Infrastructure.Caching;
 
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Text;
 
 using BaseCache.Application.Common.ApplicationServices.Caching;
@@ -9,6 +16,9 @@ using BaseCache.Application.Common.ApplicationServices.Serializer;
 using BaseCache.Infrastructure.Settings;
 
 
+/// <summary>
+/// Redis-backed distributed cache implementation.
+/// </summary>
 public class RedisCacheService : ICacheService
 {
     private readonly IDistributedCache _cache;
@@ -16,16 +26,24 @@ public class RedisCacheService : ICacheService
     private readonly CacheSettings _settings;
     private readonly ILogger<RedisCacheService> _logger;
 
+    /// <summary>
+    /// Initializes RedisCacheService with required dependencies.
+    /// Logs initialization info (construction logging pattern).
+    /// </summary>
     public RedisCacheService(
         IDistributedCache cache,
         ISerializerService serializer,
-        CacheSettings settings,
+        IOptions<CacheSettings> settings,
         ILogger<RedisCacheService> logger)
     {
         _cache = cache;
         _serializer = serializer;
-        _settings = settings;
+        _settings = settings.Value;
         _logger = logger;
+
+        _logger.LogInformation(
+            "Cache initialized: Redis (DefaultSlidingExpiration={Minutes}m)",
+            _settings.DefaultSlidingExpirationMinutes);
     }
 
     public T? Get<T>(string key)

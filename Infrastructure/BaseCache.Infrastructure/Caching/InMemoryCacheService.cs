@@ -1,26 +1,44 @@
+/// <summary>
+/// InMemoryCacheService provides in-process caching using IMemoryCache.
+///
+/// <para>Used as default/fallback cache when Redis is unavailable or not configured.</para>
+/// </summary>
+
 namespace BaseCache.Infrastructure.Caching;
 
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 using BaseCache.Application.Common.ApplicationServices.Caching;
 using BaseCache.Infrastructure.Settings;
 
 
+/// <summary>
+/// In-memory cache implementation using Microsoft.Extensions.Caching.Memory.
+/// </summary>
 public class InMemoryCacheService : ICacheService
 {
     private readonly IMemoryCache _cache;
     private readonly CacheSettings _settings;
     private readonly ILogger<InMemoryCacheService> _logger;
 
+    /// <summary>
+    /// Initializes InMemoryCacheService with required dependencies.
+    /// Logs initialization info (construction logging pattern).
+    /// </summary>
     public InMemoryCacheService(
         IMemoryCache cache,
-        CacheSettings settings,
+        IOptions<CacheSettings> settings,
         ILogger<InMemoryCacheService> logger)
     {
         _cache = cache;
-        _settings = settings;
+        _settings = settings.Value;
         _logger = logger;
+
+        _logger.LogInformation(
+            "Cache initialized: InMemory (DefaultSlidingExpiration={Minutes}m)",
+            _settings.DefaultSlidingExpirationMinutes);
     }
 
     public T? Get<T>(string key) =>
